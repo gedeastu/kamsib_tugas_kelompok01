@@ -26,13 +26,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <form method="post" action="">
         <label for="name">Nama:</label>
-        <input type="text" id="name" name="name" required>
+        <input type="text" id="name" name="name">
 
         <label for="age">Usia:</label>
-        <input type="number" id="age" name="age" required>
+        <input type="number" id="age" name="age">
 
         <label for="grade">Nilai:</label>
-        <input type="text" id="grade" name="grade" required>
+        <input type="text" id="grade" name="grade">
 
         <button type="submit">Tambah Siswa</button>
     </form>
