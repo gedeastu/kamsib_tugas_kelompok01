@@ -25,30 +25,80 @@ def index():
 
 @app.route('/add', methods=['POST'])
 def add_student():
-    name = request.form['name']
-    age = request.form['age']
-    grade = request.form['grade']
-    
+    try:
+        name = request.form.get('name', '').strip()
+        age_raw = request.form.get('age', '').strip()
+        grade = request.form.get('grade', '').strip()
 
-    connection = sqlite3.connect('instance/students.db')
-    cursor = connection.cursor()
+        if not name or not age_raw or not grade:
+            return """
+            <script>
+                alert("Semua field wajib diisi!");
+                window.location.href = "/";
+            </script>
+            """
 
-    # RAW Query
-    # db.session.execute(
-    #     text("INSERT INTO student (name, age, grade) VALUES (:name, :age, :grade)"),
-    #     {'name': name, 'age': age, 'grade': grade}
-    # )
-    # db.session.commit()
-    
-    # Tanda :named digunakan sebagai placeholder agar SQLite bisa memisahkan antara perintah SQL dan data yang dikirimkan, jadi user tidak bisa mengubah perintah SQL melalui input
-    query = "INSERT INTO student (name, age, grade) VALUES (:name,:age,:grade)"
-    
-    # dengan mengirim data berupa mapping untuk menghindari urutan yang salah saat dikirimkan
-    cursor.execute(query,({'name': name, 'age': age, 'grade': grade}))
-    connection.commit()
-    connection.close()
-    return redirect(url_for('index'))
+        if not age_raw.isdigit():
+            return """
+            <script>
+                alert("Age harus berupa angka!");
+                window.location.href = "/";
+            </script>
+            """
 
+        age = int(age_raw)
+
+        if age < 1 or age > 150:
+            return """
+            <script>
+                alert("Age tidak valid!");
+                window.location.href = "/";
+            </script>
+            """
+
+        connection = sqlite3.connect('instance/students.db')
+        cursor = connection.cursor()
+
+        query = "INSERT INTO student (name, age, grade) VALUES (:name,:age,:grade)"
+        cursor.execute(query, {
+            'name': name,
+            'age': age,
+            'grade': grade
+        })
+
+        connection.commit()
+        connection.close()
+
+        return """
+        <script>
+            alert("Data berhasil ditambahkan!");
+            window.location.href = "/";
+        </script>
+        """
+
+    except ValueError:
+        return """
+        <script>
+            alert("Terjadi kesalahan konversi data!");
+            window.location.href = "/";
+        </script>
+        """
+
+    except sqlite3.Error:
+        return """
+        <script>
+            alert("Terjadi kesalahan pada database!");
+            window.location.href = "/";
+        </script>
+        """
+
+    except Exception:
+        return """
+        <script>
+            alert("Terjadi kesalahan pada server!");
+            window.location.href = "/";
+        </script>
+        """
 
 @app.route('/delete/<int:id>') 
 def delete_student(id):
@@ -83,5 +133,5 @@ def edit_student(id):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(host='0.0.0.0', port=5040, debug=True)
+    app.run(host='0.0.0.0', port=6969, debug=True)
 
