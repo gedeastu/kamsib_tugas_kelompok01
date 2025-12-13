@@ -14,7 +14,7 @@ def login_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
         if "user" not in session:
-            return abort(403)
+            return redirect(url_for("login"))   
         return f(*args, **kwargs)
     return decorator
 
@@ -34,8 +34,6 @@ def register():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-
-        # Cek apakah username sudah ada
         existing = User.query.filter_by(username=username).first()
         if existing:
             return "Username sudah dipakai."
@@ -50,18 +48,45 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    username_error = None
+    password_error = None
+    username_value = ""
+    password_value = ""
+
     if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        username_value = username      
+        password_value = password      
 
         user = User.query.filter_by(username=username).first()
-        if user and check_password_hash(user.password, password):
-            session["user"] = user.username
-            return redirect(url_for("index"))
 
-        return "Username atau password salah."
+        if not user:
+            username_error = "Username tidak ditemukan."
+        else:
+            if not check_password_hash(user.password, password):
+                password_error = "Password salah."
 
-    return render_template("login.html")
+        if username_error or password_error:
+            return render_template(
+                "login.html",
+                username_error=username_error,
+                password_error=password_error,
+                username_value=username_value,
+                password_value=password_value
+            )
+
+        session["user"] = user.username
+        return redirect(url_for("index"))
+
+    return render_template(
+        "login.html",
+        username_error=username_error,
+        password_error=password_error,
+        username_value=username_value,
+        password_value=password_value
+    )
 
 @app.route('/logout')
 def logout():

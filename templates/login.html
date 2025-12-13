@@ -1,29 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
+<script>
+function togglePassword() {
+    const pass = document.getElementById("password");
+    const icon = document.getElementById("toggleIcon");
+
+    if (pass.type === "password") {
+        pass.type = "text";
+        icon.classList.remove("bi-eye-slash");
+        icon.classList.add("bi-eye");
+    } else {
+        pass.type = "password";
+        icon.classList.remove("bi-eye");
+        icon.classList.add("bi-eye-slash");
+    }
+}
+</script>
+
 <body class="bg-light">
 
     <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
         <div class="card shadow p-4" style="width: 380px;">
             <h3 class="text-center mb-4">Login</h3>
 
-            {% if error %}
-            <div class="alert alert-danger">{{ error }}</div>
-            {% endif %}
-
             <form action="/login" method="POST">
+
                 <div class="form-group">
                     <label>Username</label>
-                    <input type="text" name="username" class="form-control" required>
+                    <input type="text" name="username" class="form-control" value="{{ username_value }}" required>
+
+                    {% if username_error %}
+                    <small class="text-danger">{{ username_error }}</small>
+                    {% endif %}
                 </div>
 
-                <div class="form-group mt-2">
+                <div class="form-group mt-2" style="position: relative;">
                     <label>Password</label>
-                    <input type="password" name="password" class="form-control" required>
+
+                    <input type="password" id="password" name="password" class="form-control pr-5"
+                        value="{{ password_value }}" required>
+
+                    <!-- Icon mata -->
+                    <i id="toggleIcon" class="bi bi-eye-slash" onclick="togglePassword()" style="
+            position: absolute;
+            right: 15px;
+            top: 38px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #6c757d;
+       ">
+                    </i>
+
+                    {% if password_error %}
+                    <small class="text-danger">{{ password_error }}</small>
+                    {% endif %}
                 </div>
 
                 <button class="btn btn-primary w-100 mt-3">Login</button>
@@ -36,4 +73,5 @@
     </div>
 
 </body>
+
 </html>
