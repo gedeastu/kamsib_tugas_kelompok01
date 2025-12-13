@@ -106,7 +106,6 @@ def edit_student(id):
             age_raw = request.form.get('age', '').strip()
             grade = request.form.get('grade', '').strip()
 
-            # ===== CWE-20 =====
             if not name or not age_raw or not grade:
                 return alert("Semua field wajib diisi!")
 
