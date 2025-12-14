@@ -1,14 +1,15 @@
-from flask import Flask, render_template, request, redirect, url_for, session, abort
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import text
+from flask import Flask, render_template, request, redirect, url_for, session, abort # pyright: ignore[reportMissingImports]
+from flask_sqlalchemy import SQLAlchemy # type: ignore
+from sqlalchemy import text # pyright: ignore[reportMissingImports]
 from functools import wraps
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash # pyright: ignore[reportMissingImports]
 import sqlite3
+import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///students.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = "kunci-rahasia-ku"
+app.secret_key = os.environ.get("SECRET_KEY")
 db = SQLAlchemy(app)
 
 def login_required(f):

@@ -1,0 +1,8 @@
+# File log
+*.log
+
+# Folder dependencies
+node_modules/
+
+# File konfigurasi
+.env
