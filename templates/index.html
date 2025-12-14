@@ -6,7 +6,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container mt-5">
+
+    <!-- Tombol Logout (rapi, kanan atas) -->
+    <div class="container mt-3 d-flex justify-content-end">
+        <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+    </div>
+
+    <div class="container mt-3">
         <h1>Students</h1>
         <form action="/add" method="POST">
             <input type="text" name="name" placeholder="Name">
@@ -14,6 +20,7 @@
             <input type="text" name="grade" placeholder="Grade">
             <button type="submit" class="btn btn-primary">Add Student</button>
         </form>
+
         <table class="table mt-3">
             <thead>
                 <tr>
@@ -37,6 +44,8 @@
                 {% endfor %}
             </tbody>
         </table>
+
     </div>
+
 </body>
 </html>
