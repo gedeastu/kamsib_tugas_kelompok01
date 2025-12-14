@@ -4,8 +4,10 @@ from sqlalchemy import text # pyright: ignore[reportMissingImports]
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash # pyright: ignore[reportMissingImports]
 import sqlite3
-import os
+import os 
+from dotenv import load_dotenv # type: ignore
 
+load_dotenv()
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///students.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
